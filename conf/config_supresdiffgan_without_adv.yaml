@@ -1,0 +1,60 @@
+mode: 'train-test'
+
+model:
+  name: 'SupResDiffGAN_without_adv'
+  lr: 0.0001
+  alfa_perceptual: 0.001 # perceptual loss weight
+  use_perceptual_loss: False # to use perceptual loss, set to True
+  load_model:
+
+wandb_logger:
+  project: 'your_project' # your wandb project
+  entity: 'your_entity' # your wandb entity
+
+trainer:
+  # If both max_epochs and max_steps are set, the training will stop at the first one reached.
+  # Don't set to choose only the other one.
+  max_epochs: 200
+  max_steps: 330000
+  check_val_every_n_epoch: 5
+  limit_val_batches: 1
+  log_every_n_steps: 1
+
+dataset:
+  name: 'celeb' 
+  batch_size: 32
+  resize: True
+  scale: 4 # used only for train_test split or tests
+
+evaluation:
+  mode: steps # steps, posterior, all
+  steps: # list of interference steps
+    - 100
+    - 500
+  posteriors: # list of posteriors
+    - 'ddpm'
+    - 'ddim'
+  save_results: True # results metrics stored in csv file
+  results_file: 'evaluation_results/steps_evaluation.csv'
+
+checkpoint:
+  monitor: 'val/LPIPS'
+  dirpath: 'models/checkpoints/'
+  save_top_k: 1
+  mode: 'min'
+
+autoencoder: 'VAE'
+feature_extractor: True
+
+unet:
+  - 64
+  - 96
+  - 128
+  - 512
+
+diffusion:
+  timesteps: 1000
+  beta_type: 'cosine'
+  posterior_type: 'ddpm'
+  validation_timesteps: 1000
+  validation_posterior_type: 'ddpm'
