@@ -1,0 +1,40 @@
+mode: 'train-test'
+
+model:
+  name: 'ResShift'
+  lr: 0.0001
+  load_model:
+
+wandb_logger:
+  project: 'your_project' # your wandb project
+  entity: 'your_entity' # your wandb entity
+
+trainer:
+  # If both max_epochs and max_steps are set, the training will stop at the first one reached.
+  # Don't set to choose only the other one.
+  max_epochs: 200
+  max_steps: 330000
+  check_val_every_n_epoch: 2
+  limit_val_batches: 1
+  log_every_n_steps: 1
+
+dataset:
+  name: 'imagenet' 
+  batch_size: 8
+  resize: True  # For diffusion model resize should be True, while for GAN model it should be False
+  scale: 4 # used only for train_test split or tests
+
+checkpoint:
+  monitor: 'val/LPIPS'
+  dirpath: 'models/checkpoints/'
+  save_top_k: 1
+  mode: 'min'
+
+unet:
+  - 64
+  - 96
+  - 128
+  - 512
+
+diffusion:
+  timesteps: 1000

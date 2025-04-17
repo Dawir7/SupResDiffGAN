@@ -1,0 +1,40 @@
+mode: 'train-test'
+
+model:
+  name: 'ESRGAN'
+  lr: 0.0002
+  load_model:
+
+wandb_logger:
+  project: 'your_project' # your wandb project
+  entity: 'your_entity' # your wandb entity
+
+trainer:
+  # If both max_epochs and max_steps are set, the training will stop at the first one reached.
+  # Don't set to choose only the other one.
+  max_epochs: 200
+  max_steps: 330000
+  check_val_every_n_epoch: 5
+  limit_val_batches: 1
+  log_every_n_steps: 1
+
+dataset:
+  name: 'celeb' 
+  batch_size: 16
+  resize: False  # For diffusion model resize should be True, while for GAN model it should be False
+  scale: 4 # used only for train_test split or tests
+
+checkpoint:
+  monitor: 'val/LPIPS'
+  dirpath: 'models/checkpoints/'
+  save_top_k: 1
+  mode: 'min'
+
+discriminator:
+  in_channels: 3
+
+generator:
+  in_channels: 3
+  out_channels: 3
+  scale_factor: 4
+  num_resblocks: 23
