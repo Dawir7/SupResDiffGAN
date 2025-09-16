@@ -250,61 +250,6 @@ def model_selection(cfg, device):
             cfg, device, SupResDiffGAN_without_adv, use_discriminator=False
         )
 
-    elif cfg.model.name == "SupResDiffGAN_no_perceptual":
-        if cfg.autoencoder == "VAE":
-            model_id = "stabilityai/stable-diffusion-2-1"
-            autoencoder = AutoencoderKL.from_pretrained(model_id, subfolder="vae").to(
-                device
-            )
-
-        discriminator = Discriminator_supresdiffgan(
-            in_channels=cfg.discriminator.in_channels,
-            channels=cfg.discriminator.channels,
-        )
-        unet = UNet_supresdiffgan(cfg.unet)
-        diffusion = Diffusion_supresdiffgan(
-            timesteps=cfg.diffusion.timesteps,
-            beta_type=cfg.diffusion.beta_type,
-            posterior_type=cfg.diffusion.posterior_type,
-        )
-
-        if cfg.model.load_model is not None:
-            model_path = cfg.model.load_model
-            _, ext = os.path.splitext(model_path)
-            if ext == ".pth":
-                model = SupResDiffGAN_no_perceptual(
-                    ae=autoencoder,
-                    discriminator=discriminator,
-                    unet=unet,
-                    diffusion=diffusion,
-                    learning_rate=cfg.model.lr,
-                )
-                model.load_state_dict(torch.load(model_path, map_location=device))
-            elif ext == ".ckpt":
-                model = SupResDiffGAN_no_perceptual.load_from_checkpoint(
-                    model_path,
-                    map_location=device,
-                    ae=autoencoder,
-                    discriminator=discriminator,
-                    unet=unet,
-                    diffusion=diffusion,
-                    learning_rate=cfg.model.lr,
-                )
-
-            else:
-                raise ValueError(f"Unsupported file extension: {ext}")
-
-        else:
-            model = SupResDiffGAN_no_perceptual(
-                ae=autoencoder,
-                discriminator=discriminator,
-                unet=unet,
-                diffusion=diffusion,
-                learning_rate=cfg.model.lr,
-            )
-
-        return model
-
     elif cfg.model.name == "SupResDiffGAN_simple_gan":
         return initialize_supresdiffgan(
             cfg, device, SupResDiffGAN_simple_gan, use_discriminator=True

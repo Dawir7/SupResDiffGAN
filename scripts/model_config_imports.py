@@ -40,6 +40,5 @@ from SupResDiffGAN.modules.FeatureExtractor import (
 from SupResDiffGAN.modules.UNet import UNet as UNet_supresdiffgan
 from SupResDiffGAN.modules.VggLoss import VGGLoss as VGGLoss_supresdiffgan
 from SupResDiffGAN.SupResDiffGAN import SupResDiffGAN
-from SupResDiffGAN.SupResDiffGAN_no_perceptual import SupResDiffGAN_no_perceptual
 from SupResDiffGAN.SupResDiffGAN_simple_gan import SupResDiffGAN_simple_gan
 from SupResDiffGAN.SupResDiffGAN_without_adv import SupResDiffGAN_without_adv
